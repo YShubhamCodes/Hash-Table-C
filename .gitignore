@@ -1,0 +1,13 @@
+# Compiled binaries
+main
+test_runner
+
+# Object files
+*.o
+*.out
+
+# Editor / OS junk
+.vscode/
+.idea/
+*.swp
+.DS_Store

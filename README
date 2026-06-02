@@ -1,0 +1,90 @@
+# Hash Table in C
+
+A hash table implemented from scratch in C using **open addressing with linear probing**.  
+Built as a learning project — no external dependencies, pure C11.
+
+## Features
+
+- FNV-1a 64-bit hash function
+- Open addressing / linear probing for collision resolution
+- Automatic expansion (doubles capacity when load factor hits 0.5)
+- Generic `void*` values — store any type
+- Forward iterator (`hti`) for full table traversal
+
+## File Layout
+
+```
+hash_table/
+├── src/
+│   ├── hash_table.c   # Core implementation
+│   └── main.c         # Demo / usage example
+├── include/
+│   └── hash_table.h   # Public API
+├── tests/
+│   └── test_hash_table.c
+├── .gitignore
+├── Makefile
+└── README.md
+```
+
+## Build & Run
+
+```bash
+# Build the demo
+make
+
+# Run the demo
+./main
+
+# Build and run tests
+make test
+
+# Clean build artifacts
+make clean
+```
+
+## Usage Example
+
+```c
+#include "hash_table.h"
+#include <stdlib.h>
+
+int main(void) {
+    ht *table = ht_create();
+
+    int year = 2010;
+    ht_set(table, "Inception", &year);
+
+    int *got = ht_get(table, "Inception");  // → 2010
+
+    ht_destroy(table);
+    return 0;
+}
+```
+
+> **Note:** `value` must not be `NULL` — `ht_get` returns `NULL` to signal "key not found".  
+> Heap-allocate values you want to store, and free them before calling `ht_destroy`.
+
+## How It Works
+
+| Operation  | Average | Worst case |
+|------------|---------|------------|
+| `ht_get`   | O(1)    | O(n)       |
+| `ht_set`   | O(1)    | O(n)       |
+| `ht_next`  | O(1) amortized | — |
+
+Collisions are resolved by scanning forward linearly until an empty slot is found (linear probing).  
+When `size >= capacity / 2`, the bucket array is doubled and all entries are rehashed.
+
+## Planned Improvements
+
+- Deletion with tombstones (field already in `ht_entry`)
+- Shrink on low load factor
+- Robin Hood hashing (reduces clustering)
+- String length caching
+- SIMD probing
+- Generic typed macros
+
+## License
+
+MIT
